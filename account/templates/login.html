@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Вход</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+    </head>
+    <body>
+        <header style="user-select: none"><!--Шапка слева сбоку-->
+            <a href="{% url 'profile' %}"><img src="{% static 'media/user.png' %}" width="50px"></a>
+            <a href="{% url 'search' %}"><img src="{% static 'media/search-interface-symbol.png' %}" width="50px"></a>
+            <a href="{% url 'index' %}"><img src="{% static 'media/home.png' %}" width="50px"></a>
+            <a href="{% url 'chat_list' %}"><img src="{% static 'media/message.png' %}" width="50px"></a>
+            <a href="{% url 'likes' %}"><img src="{% static 'media/heart.png' %}" width="50px"></a>
+            <a href="{% url 'create_post' %}"><img src="{% static 'media/addition.png' %}" width="50px"></a>
+        </header>     
+        <main>
+            <div class="main">
+                <form method="post">
+                    {% csrf_token %}
+                    <h1>Вход</h1>
+                    <br><br> 
+                    <label for="username">Имя пользователя</label><br>
+                    <input type="text" id="username" name="username"><br>
+                    <label for="password">Пароль</label><br>
+                    <input type="password" id="password" name="password"><br><br>
+                    {% if form.non_field_errors %}
+                        <div class="error">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <input type="submit" value="Войти">
+                    <br>
+                    <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь</a></p>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>
+

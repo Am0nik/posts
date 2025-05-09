@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Чаты</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+    </head>
+    <body>
+        <header style="user-select: none"><!--Шапка слева сбоку-->
+            <a href="{% url 'profile' %}"><img src="{% static 'media/user.png' %}" width="50px"></a>
+            <a href="{% url 'search' %}"><img src="{% static 'media/search-interface-symbol.png' %}" width="50px"></a>
+            <a href="{% url 'index' %}"><img src="{% static 'media/home.png' %}" width="50px"></a>
+            <a href="{% url 'chat_list' %}"><img src="{% static 'media/message.png' %}" width="50px"></a>
+            <a href="{% url 'likes' %}"><img src="{% static 'media/heart.png' %}" width="50px"></a>
+            <a href="{% url 'create_post' %}"><img src="{% static 'media/addition.png' %}" width="50px"></a>
+        </header>  
+        <div style="display: block;">
+            <div style="display: flex;height: 100vh;">
+                <div style="display: block">
+                    <div style="width: 300px;border: 2px aliceblue solid;height: 100vh;overflow-y: auto;border-top: 0;border-bottom: 0;text-align: center;">
+                        <h1 style="margin-top: 50px;color: aliceblue;">Чаты</h1>
+                        <hr style="margin-bottom: 20px;">
+                        {% for chat in chats %}
+                            <a href="{% url 'chat_detail' chat.id %}" style="color: antiquewhite;font-weight: 900;">
+                                {% if chat.sender == request.user %}
+                                    {{ chat.receiver.username }}
+                                {% else %}
+                                    {{ chat.sender.username }}
+                                {% endif %}
+                            </a>
+                        {% empty %}
+                            <li style="color: aliceblue;text-align: center;font-size: 30px;">Чатов пока нет.</li>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div style="width: 100%;">
+                    {% if selected_chat %}
+                        <div style="background-color: rgb(30,30,30);margin: 0;padding: 20px;color: antiquewhite;font-size: 25px;display: flex;">
+                            {% if selected_chat.sender == request.user %}
+                                {% if selected_chat.receiver.avatar %}
+                                    <img src="{{ selected_chat.receiver.avatar.url }}" width="40" height="40" style="border-radius: 50%;">
+                                {% else %}
+                                    <img src="{% static 'media/default_user.png' %}" width="40" height="40" style="border-radius: 50%;">
+                                {% endif %}
+                            {% else %}
+                                {% if selected_chat.sender.avatar %}
+                                    <img src="{{ selected_chat.sender.avatar.url }}" width="40" height="40" style="border-radius: 50%;">
+                                {% else %}
+                                    <img src="{% static 'media/default_user.png' %}" width="40" height="40" style="border-radius: 50%;">
+                                {% endif %}
+                            {% endif %}
+
+
+                            <h3 style="margin-top: auto;margin-right: auto;">
+                                {% if selected_chat.sender == request.user %}
+                                    {{ selected_chat.receiver.username }}
+                                {% else %}
+                                    {{ selected_chat.sender.username }}
+                                {% endif %}
+                            </h3>
+                        </div>
+                        <div style="padding:15px;color: aliceblue;max-width:50%;word-break: break-all;">
+                            <div>
+                                {% for message in selected_chat.messages.all %}
+                                    <div style="margin-bottom: 20px;background-color: rgb(30,30,30);padding: 5px;border-radius: 5px;">
+                                        <strong>{{ message.sender.username }} </strong><small>({{ message.timestamp }})</small>
+                                        <hr style="margin-top: 5px;margin-bottom: 5px;">
+                                        <p>{{ message.content }} </p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'chat_detail' selected_chat.id %}" style="position: fixed;width: 78.7%;left:calc(50% - 30.3%);bottom: 0px;background-color: rgb(30,30,30);padding: 10px;border-radius: 5px;display: flex;align-items: center;bottom: 0;margin:0;">
+                            {% csrf_token %}
+                            <input type="text" name="content" placeholder="Введите сообщение..." required style="width: 80%;margin-top: auto;margin-bottom: auto;">
+                            <button type="submit" style="background-color:#ffb300;padding: 15px;border: none;border-radius: 15px;font-weight: 700;color: rgb(93, 37, 0);cursor: pointer;">Отправить</button>
+                        </form>
+                    {% else %}
+                        <p style="color: aliceblue;text-align: center;font-size: 30px;">Выберите чат слева</p>
+                    {% endif %}
+                </div>
+                
+            </div>  
+        </div>
+    </body>
+    <script src="{% static 'scripts.js' %}"></script>
+</html>
+
