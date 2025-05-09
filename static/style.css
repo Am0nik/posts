@@ -1,0 +1,415 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'YanoneKaffeesatz-VariableFont_wght';
+    src: url("{% static 'fonts/YanoneKaffeesatz-VariableFont_wght.ttf' %}");
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: rgb(16,16,16);
+}
+::-webkit-scrollbar-thumb {
+    background-color: #545454;
+    border-radius: 5px;
+}
+
+body{
+    background-color: rgb(16, 16, 16);
+    display: block;
+    font-family:'YanoneKaffeesatz-VariableFont_wght', sans-serif;
+}
+
+header{
+    left:0;
+    position: fixed;
+    width:100px;
+    height:65vh;
+    top:17.5vh;
+    display: block;
+    background-color: black;
+    text-align: center;
+    padding: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 5px;
+    border-bottom-right-radius: 30px;
+    border-top-right-radius : 30px;
+}
+
+header a{
+    padding-right: auto;
+    text-align: center;
+    text-decoration: none;
+    color: aliceblue;
+}
+
+header img{
+    padding-top:20px;
+    padding-right: auto;
+    text-align: center;
+}
+
+main {
+    text-align: center;
+}
+
+
+/*-------------КЛАССЫ--------------*/
+
+.main {
+    position: relative;
+    width: 50%;
+    margin: 100px auto;
+    border: 2px solid aliceblue;
+    border-radius: 15px;
+    overflow: hidden;
+    color: white;
+    z-index: 1;
+}
+.main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('/static/media/user.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px);
+    z-index: 0;
+}
+.main > * {
+    position: relative;
+    z-index: 1;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.profile-header-container{
+    display:block;
+    margin-bottom: 20px;
+    
+}
+
+.profile-container{
+    color: white;
+    padding: 15px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid aliceblue;
+    border-radius: 5px;
+    background-color: rgb(25, 25, 25);
+}
+
+.profile-edit-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgb(25, 25, 25);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+select, textarea {
+    width:90%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+input{
+    width:100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.btn-save {
+    width: 200px;
+    padding: 10px;
+    background-color: #ead656;
+    color: rgb(224, 127, 0);
+    border: none;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-save:hover {
+    background-color: #f0c23b;
+}
+
+.form-container {
+    width: 100%;
+    max-width:500px; 
+    text-align: center;
+}
+
+.tabs{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.tabs a{
+    text-decoration: none;
+    color: aliceblue;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size:25px
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    color: white;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal textarea {
+    width: 100%;
+    height: 150px;
+    background-color: #2a2a2a;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    resize: none;
+}
+.modal button {
+    background-color:rgb(255, 217, 0);
+    border: none;
+    padding: 10px 20px;
+    color: #574200;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+.modal-body{
+    width: 100%;
+}
+
+.input-post{
+    width: 90%;
+    overflow-y: auto;
+}
+
+.input-post::-webkit-scrollbar {
+    width: 8px;
+}
+.input-post::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/*--------------------------ФОРМА------------------*/
+form {
+    width: 300px;
+    margin: 100px auto; 
+    padding: 20px;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+    color: aliceblue;
+    text-align: center;
+}
+
+form h1 {
+    text-align: center;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="submit"] {
+    width: 90%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    display: block; /* Обеспечит выравнивание по центру */
+    margin-right: auto;
+    margin-left: auto;
+}
+
+form input[type="submit"] {
+    background-color: #FFCD32;
+    color: #7E1088;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #ebb30a;
+}
+
+form a {
+    color:#ffe979;
+    font-weight: 700;
+}
+form a:hover {
+    color: #e7d36f;
+}
+
+.posts{
+    width: 100%;
+}
+
+
+
+
+/*--------------------------ПОСТ------------------*/
+.post{
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+    padding-left: 0;
+    background-color: rgb(25, 25, 25);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: white;
+    word-break: break-all;
+}
+
+.posts-list{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.post-area {
+    width: 60%;
+}
+.comments-area {
+    width: 35%;
+    background-color: rgb(30,30,30);
+    color: aliceblue;
+    padding: 10px;
+    border-radius: 30px;
+}
+/*-------------------------------ПОИСК------------------*/
+.user-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.user-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+}
+
+.user-info .username {
+    font-weight: bold;
+    color: aliceblue;
+}
+
+.user-info .nickname {
+    color: gray;
+    font-size: 0.9em;
+}
+
+.search-form {
+    margin-bottom: 20px;
+}
+
+.search-form input[type="text"] {
+    padding: 8px;
+    width: 250px;
+}
+
+.search-form button {
+    padding: 8px 12px;
+}
+
+.search_users{
+    background-color: #ebb30a;
+    color: #674e01;
+    font-weight: 900;
+    border-radius: 20px;
+    border:None;
+    width: 30%;
+    cursor: pointer;
+}

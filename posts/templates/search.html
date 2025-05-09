@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+</head>
+<body>
+    <header style="user-select: none"><!--Шапка слева сбоку-->
+        <a href="{% url 'profile' %}"><img src="{% static 'media/user.png' %}" width="50px"></a>
+        <a href="{% url 'search' %}"><img src="{% static 'media/search-interface-symbol.png' %}" width="50px"></a>
+        <a href="{% url 'index' %}"><img src="{% static 'media/home.png' %}" width="50px"></a>
+        <a href="{% url 'chat_list' %}"><img src="{% static 'media/message.png' %}" width="50px"></a>
+        <a href="{% url 'likes' %}"><img src="{% static 'media/heart.png' %}" width="50px"></a>
+        <a href="{% url 'create_post' %}"><img src="{% static 'media/addition.png' %}" width="50px"></a>
+    </header>    
+
+    <main style="padding: 20px; color: #eee; max-width: 800px; margin: auto;">
+        <h1 style="user-select: none;">Поиск</h1>
+        <form method="get" action="" style="display: flex; gap: 10px; margin-bottom: 30px;user-select: none;width:60%;">
+            <input type="text" name="q" placeholder="Что искать?" autocomplete="off" value="{{ query }}" style="flex:1; padding: 8px;width: 200px;margin-top: auto;margin-bottom: auto;">
+            <select name="type" style="padding: 8px; width: 150px;background-color: #ffffff;border: none;border-radius: 15px;cursor: pointer;">
+                <option value="users" {% if search_type == 'users' %}selected{% endif %} style="border-radius: 15px;border: none;cursor: pointer;">Пользователи</option>
+                <option value="posts" {% if search_type == 'posts' %}selected{% endif %} style="border-radius: 15px;border: none;cursor: pointer;">Посты</option>
+            </select>
+            <button type="submit" style="padding: 8px 16px;border: none;border-radius: 15px;background-color: rgb(255, 197, 21);color: #a46500;font-weight: 600;cursor: pointer;">Найти</button>
+        </form>
+
+        {% if search_type == 'users' %}
+            <h2 style="margin-bottom: 20px;">Результаты поиска: Пользователи</h2>
+            {% if users %}
+                {% for u in users %}
+                    <div class="user-card" style="display:flex; align-items:center; padding:10px; border-bottom:1px solid #444;">
+                        <a href="{% url 'user_profile' user_id=u.id %}" style="display:flex; align-items:center; text-decoration:none; color:#eee;">
+                            <img src="{% if u.avatar %}{{ u.avatar.url }}{% else %}{% static 'media/default_user.png' %}{% endif %}" width="50" height="50" style="border-radius:50%; margin-right:15px;">
+                            <div>
+                                <div style="font-size:1.1em; font-weight:bold;">{{ u.username }}</div>
+                                <div style="color:#888;">@{{ u.user_nickname }}</div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Пользователи не найдены.</p>
+            {% endif %}
+        {% else %}
+            <h2>Результаты поиска: Посты</h2>
+            {% if posts %}
+                {% for p in posts %}
+                    <div class="post-card" style="padding:10px; border-bottom:1px solid #444; margin-bottom:15px;">
+                        <div class="post">
+                            <div style="display: flex;">
+                                <div style="width: 5%;margin-right: 20px;user-select: none;">
+                                    {% if p.user.avatar %}
+                                        <img src="{{ p.user.avatar.url }}" width="50px" style="border-radius: 100%;background-color: rgb(25,25,25)">
+                                    {% else %}
+                                        <img src="{% static 'media/default_user.png' %}" width="50px" style="border-radius: 100%;background-color: rgb(25,25,25)">
+                                    {% endif %}
+                                </div>
+                                <div style="display: block;">
+                                    <div style="display: flex;margin-bottom: 5px;user-select: none;">
+                                        <h4 style='margin-right: 5px;'>
+                                            <a href="{% url 'user_profile' user_id=p.user.id %}" style="color: aliceblue; text-decoration: none;">
+                                                {{ p.user }}
+                                            </a>
+                                        </h4>
+                                        
+                                        
+                                        <span style="color: rgb(175, 175, 175);font-weight: 100;"><small>{{ p.created_at|date:"j E Y, H:i" }}</small></span>
+                                    </div>
+                                    <div style="display: block;">
+                                        <div style="text-align: left;">
+                                            <p>{{ p.content }}</p>
+                                            {% if p.image %}
+                                                <img src="{{ p.image.url }}" style="max-width: 100%; max-height: 300px; border-radius: 5px;margin-top: 10px" alt="Изображение">
+                                            {% endif %}
+                                            <p style="margin-top: 10px;">
+                                                {% for hashtag in p.hashtags.all %}
+                                                    <a href="{% url 'search' %}?q={{ hashtag.name }}" style="color: rgb(0, 204, 255);cursor: pointer;">#{{ hashtag.name }}</a>
+                                                {% endfor %}
+                                                <br style="user-select: none;"><br style="user-select: none;">
+                                            </p>
+                                            {% csrf_token %}
+                                            <div style="display: flex;">
+                                                <p id="likes-count-{{ p.id }}">{{ p.likes.count }}</p>
+                                                <img 
+                                                    id="like-btn-{{ p.id }}" 
+                                                    src="{% static 'media/like.png' %}" 
+                                                    data-liked-src="{% static 'media/liked.png' %}" 
+                                                    data-unliked-src="{% static 'media/like.png' %}" 
+                                                    width="20px" 
+                                                    style="margin-left: 5px; cursor: pointer;user-select: none;" 
+                                                    onclick="toggleLike({{ p.id }})" 
+                                                    alt="Лайк">
+                                                <a href="{% url 'post_detail' p.id %}" style="margin-left: 5px;">
+                                                    <img 
+                                                        src="{% static 'media/comment.png' %}" 
+                                                        width="20px" 
+                                                        style="margin-left: 5px; cursor: pointer; user-select: none;" 
+                                                        alt="Комментировать">
+                                                </a>
+                                                <a href="{% url 'repost' p.id %}" style="margin-left: 5px;">
+                                                    <img 
+                                                        src="{% static 'media/repost.png' %}" 
+                                                        width="20px" 
+                                                        style="margin-left: 5px; cursor: pointer; user-select: none;" 
+                                                        alt="Репост">
+                                                </a>   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Посты не найдены.</p>
+            {% endif %}
+        {% endif %}
+    </main>
+</body>
+<script src="{% static 'scripts.js' %}"></script>
+</html>

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать пост</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+</head>
+<body>
+    <header style="user-select: none"><!--Шапка слева сбоку-->
+        <a href="{% url 'profile' %}"><img src="{% static 'media/user.png' %}" width="50px"></a>
+        <a href="{% url 'search' %}"><img src="{% static 'media/search-interface-symbol.png' %}" width="50px"></a>
+        <a href="{% url 'index' %}"><img src="{% static 'media/home.png' %}" width="50px"></a>
+        <a href="{% url 'chat_list' %}"><img src="{% static 'media/message.png' %}" width="50px"></a>
+        <a href="{% url 'likes' %}"><img src="{% static 'media/heart.png' %}" width="50px"></a>
+        <a href="{% url 'create_post' %}"><img src="{% static 'media/addition.png' %}" width="50px"></a>
+    </header>  
+
+    <main style="padding: 20px; max-width: 800px; margin: auto; color: #eee;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closeModalBtn">&times;</span>
+                <h2>Новый пост</h2>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" action="{% url 'create_post' %}" style="min-height:250px;">
+                    {% csrf_token %}
+                    <img id="previewImage" style="max-width: 100%; margin-top: 10px; display: none;max-width: 300px;max-height:300px;margin-bottom: 10px;border-radius: 5px;" />
+
+                    <textarea name="content" placeholder="Что нового?" class="input-post" style="width: 90%;height: 150px;resize:none"  required></textarea><br>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: auto; margin-bottom: auto;">
+                        <label for="imageInput" style="cursor: pointer;">
+                            <img src="{% static 'media/image-icon.png' %}" width="25" style="margin-top: 10px;" alt="Добавить изображение">
+                        </label>
+                        <input type="file" id="imageInput" name="image" style="display: none;" accept="image/*">
+
+                        <img src="{% static 'media/hashtag-icon.png' %}" width="24" alt="Хэштеги" onclick="toggleHashtags()" style="cursor: pointer;">
+                    </div>
+                    <input type="text" name="hashtags" id="hashtagsInput" placeholder="#хэштеги через пробел" style="display: none;">
+
+                    <button type="submit">Опубликовать</button>
+                    {% if form.errors %}
+                        <div style="color: red;">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+<script src="{% static 'scripts.js' %}"></script>
+</html>
+

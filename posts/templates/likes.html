@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Понравившиеся</title>
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+    </head>
+    <body>
+        <header style="user-select: none"><!--Шапка слева сбоку-->
+            <a href="{% url 'profile' %}"><img src="{% static 'media/user.png' %}" width="50px"></a>
+            <a href="{% url 'search' %}"><img src="{% static 'media/search-interface-symbol.png' %}" width="50px"></a>
+            <a href="{% url 'index' %}"><img src="{% static 'media/home.png' %}" width="50px"></a>
+            <a href="{% url 'chat_list' %}"><img src="{% static 'media/message.png' %}" width="50px"></a>
+            <a href="{% url 'likes' %}"><img src="{% static 'media/heart.png' %}" width="50px"></a>
+            <a href="{% url 'create_post' %}"><img src="{% static 'media/addition.png' %}" width="50px"></a>
+        </header>     
+        <div style="width: 50%;margin-left: auto;margin-right: auto;">
+            <h2 style="margin-bottom: 50px;margin-top: 30px;color: aliceblue;text-align: center;">Понравившиеся посты</h2>
+
+            {% if liked_posts %}
+                {% for post in liked_posts %}
+                    <div class="posts">
+                        <div class="post" style="margin-bottom: 20px;">
+                            <div style="display: flex;">
+                                <div style="width: 5%;margin-right: 20px;user-select: none;">
+                                    {% if post.user.avatar %}
+                                        <img src="{{ post.user.avatar.url }}" width="50px" style="border-radius: 100%;background-color: rgb(25,25,25)">
+                                    {% else %}
+                                        <img src="{% static 'media/default_user.png' %}" width="50px" style="border-radius: 100%;background-color: rgb(25,25,25)">
+                                    {% endif %}
+                                </div>
+                                <div style="display: block;">
+                                    <div style="display: flex;margin-bottom: 5px;user-select: none;">
+                                        <h4 style='margin-right: 5px;'>
+                                            <a href="{% url 'user_profile' user_id=post.user.id %}" style="color: aliceblue; text-decoration: none;">
+                                                {{ post.user }}
+                                            </a>
+                                        </h4>
+                                        
+                                        <span style="color: rgb(175, 175, 175);font-weight: 100;"><small>{{ post.created_at|date:"j E Y, H:i" }}</small></span>
+                                    </div>
+                                    <div style="display: block;">
+                                        <div style="text-align: left;">
+                                            <p>{{ post.content }}</p>
+                                            {% if post.image %}
+                                                <img src="{{ post.image.url }}" style="max-width: 100%; max-height: 300px; border-radius: 5px;margin-top: 10px" alt="Изображение">
+                                            {% endif %}
+                                            <p style="margin-top: 10px;">
+                                                {% for hashtag in post.hashtags.all %}
+                                                    <a href="{% url 'search' %}?q={{ hashtag.name }}" style="color: rgb(0, 204, 255);cursor: pointer;">#{{ hashtag.name }}</a>
+                                                {% endfor %}
+                                                <br style="user-select: none;"><br style="user-select: none;">
+                                            </p>
+                                            {% csrf_token %}
+                                            <div style="display: flex;">
+                                                <p id="likes-count-{{ post.id }}">{{ post.likes.count }}</p>
+                                                <img 
+                                                    id="like-btn-{{ post.id }}" 
+                                                    src="{% static 'media/like.png' %}" 
+                                                    data-liked-src="{% static 'media/liked.png' %}" 
+                                                    data-unliked-src="{% static 'media/like.png' %}" 
+                                                    width="20px" 
+                                                    style="margin-left: 5px; cursor: pointer;user-select: none;" 
+                                                    onclick="toggleLike({{ post.id }})" 
+                                                    alt="Лайк">
+                                                <a href="{% url 'post_detail' post.id %}">
+                                                    <img 
+                                                        src="{% static 'media/comment.png' %}" 
+                                                        width="20px" 
+                                                        style="margin-left: 5px; cursor: pointer; user-select: none;" 
+                                                        alt="Комментировать">
+                                                </a>    
+                                                <a href="{% url 'repost' post.id %}" style="margin-left: 5px;">
+                                                    <img 
+                                                        src="{% static 'media/repost.png' %}" 
+                                                        width="20px" 
+                                                        style="margin-left: 5px; cursor: pointer; user-select: none;" 
+                                                        alt="Репост">
+                                                </a>   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                {% endfor %}
+            {% else %}
+                <hr>
+                <p style="text-align: center;color: aliceblue;margin: 30px;">Пока нет лайкнутых постов.</p>
+                <hr>
+            {% endif %}
+        </div>  
+    </body>
+    <script src="{% static 'scripts.js' %}"></script>
+</html>
+
