@@ -124,8 +124,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 import os
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/static/media/'  # Медиа-файлы будут под `/static/media/`
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'media')
 
 LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/account/profile'  
